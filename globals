@@ -1,0 +1,48 @@
+# to be sourced
+
+# USEARCH stuff
+D5P=~/drive5
+USEARCH=$D5P/usearch7.0.1001_i86osx32
+FQ2FASTQ=$D5P/py/faqual2fastq.py
+FQRELABEL=$D5P/py/fastq_strip_barcode_relabel2.py
+NUMBER=$D5P/py/fasta_number.py
+UC2OTUTAB=$D5P/py/uc2otutab.py
+# BBMAP/bbmerge stuff
+BBMAP=~/bbmap
+BBMERGE=$BBMAP/bbmerge.sh
+
+# RDP Classifier pieces
+RDPT=~/RDPTools
+CLFRJAR=$RDPT/classifier.jar
+
+# SQL
+DB=SSP.sqlite3
+
+PRIMER=AGRGTTTGATCMTGGCTCAG
+
+# parameters for QC and trimming
+TRUNCLEN=291
+MAXEE=0.5
+CLUSTER_IDENT=0.97
+
+# sample metadata
+SAMPLE_INFO=sample_info.xls
+SAMPLES=`awk -F'\t' '{ if (substr($0, 1, 1) != "#") print $1 }' $SAMPLE_INFO`
+
+# output parameters
+OUTPUT_NAME=$DB
+
+PERSISTENT_PCNT=0.025
+PERSISTENT_BEST_PCNT=.85
+
+# utility functions
+function exists_or_exit {
+	for file in "$@"
+	do
+		if [ ! -e $file ]
+		then
+			echo "unable to find required file: $file"
+			exit 1
+		fi
+	done
+}
