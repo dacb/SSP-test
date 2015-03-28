@@ -1,0 +1,71 @@
+#!/bin/bash
+
+source globals
+
+pers_table=persistent_OTUs
+final_otus=final_otus
+
+function sum_per {
+	sample_info=$1
+	prefix=$0.$2
+	SQL=$prefix.sql
+	XLS=$prefix.xls
+	SQLRS=$prefix.read_sum.sql
+	XLSRS=$prefix.read_sum.xls
+	SQLPCNT=$prefix.percent.sql
+	XLSPCNT=$prefix.percent.xls
+	XLSPCNTT=$prefix.percent.rehsaped.xls
+
+cat << EOF > $SQL
+SELECT 
+EOF
+
+awk -F'\t' '{ if (line >= 1) { printf("\t\tSUM(%s) AS %s,\n", $1, $1); } ++line; }' $sample_info >> $SQL
+
+cat << EOF >> $SQL
+		best_tax, AVG(best_tax_confidence) AS best_tax_confidence_mean, best_tax_level
+	FROM $pers_table AS p
+	GROUP BY best_tax, best_tax_level
+;
+EOF
+
+	echo $SQL
+	mysql -h $HOST $DB < $SQL > $XLS
+	#sed -i 's/\\t/\t/g' $XLS
+
+cat << EOF > $SQLRS
+SELECT 
+EOF
+
+awk -F'\t' '{ if (line >= 1) { printf("\t\t%sSUM(%s) AS %s\n", (line == 1 ? "" : ", "), $1, $1); } ++line; }' $sample_info >> $SQLRS
+
+cat << EOF >> $SQLRS
+	FROM $final_otus
+;
+EOF
+
+	echo $SQLRS
+	mysql -h $HOST $DB < $SQLRS > $XLSRS
+	#sed -i 's/\\t/\t/g' $XLS
+
+cat << EOF > $SQLPCNT
+SELECT 
+EOF
+
+awk -F'\t' -v final_otus="$final_otus" '{ if (line >= 1) { printf("\t\t(SUM(%s) / (SELECT SUM(%s) FROM %s)) * 100 AS \"%s\",\n", $1, $1, final_otus, $7); } ++line; }' $sample_info >> $SQLPCNT
+
+cat << EOF >> $SQLPCNT
+		best_tax, AVG(best_tax_confidence) AS best_tax_confidence_mean, best_tax_level
+	FROM $pers_table AS p
+	GROUP BY best_tax, best_tax_level
+;
+EOF
+
+	echo $SQLPCNT
+	mysql -h $HOST $DB < $SQLPCNT > $XLSPCNT
+	#sed -i 's/\\t/\t/g' $XLSPCNT
+
+	awk -F'\t' -f $0.reshape.awk $XLSPCNT > $XLSPCNTT
+}
+
+sum_per sample_info.xls all
