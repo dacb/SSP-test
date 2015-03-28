@@ -16,23 +16,23 @@ RDPT=~/RDPTools
 CLFRJAR=$RDPT/classifier.jar
 
 # SQL
-DB=SSP.sqlite3
+HOST=localhost
+DB=SSP
 
 PRIMER=AGRGTTTGATCMTGGCTCAG
 
-# parameters for QC and trimming
-TRUNCLEN=291
-MAXEE=0.5
+# parameters for clustering
 CLUSTER_IDENT=0.97
 
 # sample metadata
 SAMPLE_INFO=sample_info.xls
+SAMPLE_INFO_SUBSET=sample_info.xls
 SAMPLES=`awk -F'\t' '{ if (substr($0, 1, 1) != "#") print $1 }' $SAMPLE_INFO`
 
 # output parameters
 OUTPUT_NAME=$DB
 
-PERSISTENT_PCNT=0.025
+PERSISTENT_PCNT=0.01
 PERSISTENT_BEST_PCNT=.85
 
 # utility functions
