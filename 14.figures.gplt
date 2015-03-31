@@ -1,0 +1,42 @@
+set terminal pdf color solid
+set output '14.figures.column.pdf'
+
+set datafile separator "\t"
+set boxwidth 0.8 absolute
+set style fill solid 1.00 noborder
+set grid nopolar
+set grid noxtics nomxtics ytics nomytics noztics nomztics \
+ nox2tics nomx2tics noy2tics nomy2tics nocbtics nomcbtics
+set grid layerdefault   linetype 0 linewidth 1.000,  linetype 0 linewidth 1.000
+set key bmargin center horizontal Left reverse noenhanced autotitles columnhead nobox
+#unset key
+set style histogram rowstacked title  offset character 2, 0.25, 0
+set datafile missing '-'
+set style data histograms
+#set xtics border in scale 0,0 nomirror rotate by -45 offset character 0, 0, 0 autojustify
+set xtics border in scale 0,0 nomirror rotate by -90 offset character 0, 0, 0 autojustify
+set xtics  norangelimit font ",4"
+set xtics   ()
+set ytics border in scale 0,0 mirror norotate  offset character 0, 0, 0 autojustify
+set ztics border in scale 0,0 nomirror norotate  offset character 0, 0, 0 autojustify
+set cbtics border in scale 0,0 mirror norotate  offset character 0, 0, 0 autojustify
+set rtics axis in scale 0,0 nomirror norotate  offset character 0, 0, 0 autojustify
+set xlabel  offset character 0, -2, 0 font '' textcolor lt -1 norotate
+set ylabel "Percent of population"
+set yrange [ 0 : 100 ] noreverse nowriteback
+
+set linetype  2 lc rgb "#543005" lw 1
+set linetype  3 lc rgb "#8c510a" lw 1
+set linetype  4 lc rgb "#bf812d" lw 1
+set linetype  5 lc rgb "#dfc27d" lw 1
+set linetype  6 lc rgb "#f6e8c3" lw 1
+set linetype  7 lc rgb "#f5f5f5" lw 1
+set linetype  8 lc rgb "#c7eae5" lw 1
+set linetype  9 lc rgb "#80cdc1" lw 1
+set linetype 10 lc rgb "#35978f" lw 1
+set linetype 11 lc rgb "#01665e" lw 1
+set linetype 12 lc rgb "#003c30" lw 1
+
+
+plot \
+	newhistogram "CP1_S2" lt 2, '13.summarize_persistent_otus.all.percent.rehsaped.xls' using 2:xtic(1) t col, '' u 3:xtic(1) t col, '' u 4:xtic(1) t col, '' u 5:xtic(1) t col, '' u 6:xtic(1) t col, '' u 7:xtic(1) t col, '' u 8:xtic(1) t col, '' u 9:xtic(1) t col, '' u 10:xtic(1) t col, '' u 11:xtic(1) t col, '' u 12:xtic(1)

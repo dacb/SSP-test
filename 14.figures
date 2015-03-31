@@ -1,0 +1,16 @@
+#!/bin/bash
+
+awk -F'\t' -v prefix="$0" -f $0.awk 13.summarize_persistent_otus.all.percent.rehsaped.xls 
+gnuplot $0.gplt
+
+echo MDS
+R --no-save < 14.figures.MDS.R
+echo heatmap
+awk -F'\t' -f 14.figures.heatmap.awk -v ID_start=4 12.persistent_otus.xls > $0.heatmap.xls
+R --no-save < 14.figures.heatmap.R
+echo diveristy
+R --no-save < 14.figures.diversity.R
+awk -F'\t' -f 14.figures.diversity.awk 14.figures.shannon.dat > 14.figures.shannon.reshaped.dat
+echo diversity plot
+R --no-save < 14.figures.diversity.plot.R
+
