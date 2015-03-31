@@ -52,7 +52,7 @@ cat << EOF > $SQLPCNT
 SELECT 
 EOF
 
-awk -F'\t' -v final_otus="$final_otus" '{ if (line >= 1) { printf("\t\t(SUM(%s) / (SELECT SUM(%s) FROM %s)) * 100 AS \"%s\",\n", $1, $1, final_otus, $7); } ++line; }' $sample_info >> $SQLPCNT
+awk -F'\t' -v final_otus="$final_otus" '{ if (line >= 1) { printf("\t\t(SUM(%s) / (SELECT SUM(%s) FROM %s)) * 100 AS \"%s\",\n", $1, $1, final_otus, $1); } ++line; }' $sample_info >> $SQLPCNT
 
 cat << EOF >> $SQLPCNT
 		best_tax, AVG(best_tax_confidence) AS best_tax_confidence_mean, best_tax_level
